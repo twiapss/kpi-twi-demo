@@ -21,7 +21,7 @@ const initialUsers: User[] = [
 const initialKpiData: KPIEntry[] = [
   { id: 1, office: Office.PUSAT, department: Department.MARKETING, period: Period.MONTHLY, mainKpi: "Peningkatan Penjualan", subKpi: "Mencapai Target Sales Call", target: 100, realization: 95, achievement: 95.00, notes: "Hampir mencapai target", submittedAt: new Date(), status: KpiStatus.APPROVED },
   { id: 2, office: Office.SURABAYA, department: Department.OPERASIONAL, period: Period.MONTHLY, mainKpi: "Efisiensi Operasional", subKpi: "Mengurangi Waktu Downtime Mesin", target: 10, realization: 12, achievement: 80.00, notes: "Perlu perbaikan maintenance", submittedAt: new Date(), status: KpiStatus.APPROVED },
-  { id: 3, office: Office.PUSAT, department: Department.HR_AREA, period: Period.QUARTERLY, mainKpi: "Tugas Pokok HR Area", subKpi: "Rekrutmen & Seleksi", target: 5, realization: 3, achievement: 60.00, notes: "Kesulitan mencari kandidat", submittedAt: new Date(), status: KpiStatus.PENDING },
+  { id: 3, office: Office.PUSAT, department: Department.HR_AREA, period: Period.QUARTERLY, mainKpi: "Tugas Pokok HR Area", subKpi: "Merekrut", target: 5, realization: 3, achievement: 60.00, notes: "Kesulitan mencari kandidat", submittedAt: new Date(), status: KpiStatus.PENDING },
   { id: 4, office: Office.MAKASSAR, department: Department.MARKETING, period: Period.MONTHLY, mainKpi: "Brand Awareness", subKpi: "Jumlah Engagement Media Sosial", target: 5000, realization: 5500, achievement: 110.00, notes: "Campaign berhasil", submittedAt: new Date(), status: KpiStatus.APPROVED },
 ];
 
@@ -119,24 +119,37 @@ const App: React.FC = () => {
                 </aside>
             );
         };
+        
+        const renderContent = () => {
+          switch (appView) {
+            case 'dashboard':
+              return <Dashboard kpiData={kpiData} />;
+            case 'input':
+              return <KPIInputForm addKpiEntry={addKpiEntry} onFormSubmit={() => setAppView('report')} />;
+            case 'report':
+              return <ReportView kpiData={kpiData} />;
+            case 'user-management':
+              return isAdmin ? <UserManagementPage users={users} updateUser={updateUser} /> : null;
+            default:
+              return <Dashboard kpiData={kpiData} />;
+          }
+        };
 
         return (
-            <div className="min-h-screen bg-slate-100 dark:bg-brand-blue">
+            <div className="min-h-screen bg-slate-100 dark:bg-brand-blue text-gray-800 dark:text-gray-200">
                 <Header user={currentUser} onLogout={handleLogout} />
-                <div className="flex">
+                <div className="flex" style={{ height: 'calc(100vh - 64px)' }}>
                     <Sidebar />
-                    <main className="flex-1">
-                        {appView === 'dashboard' && <Dashboard kpiData={kpiData} />}
-                        {appView === 'input' && <KPIInputForm addKpiEntry={addKpiEntry} onFormSubmit={() => setAppView('report')} />}
-                        {appView === 'report' && <ReportView kpiData={kpiData} />}
-                        {isAdmin && appView === 'user-management' && <UserManagementPage users={users} updateUser={updateUser} />}
+                    <main className="flex-1 overflow-y-auto">
+                        {renderContent()}
                     </main>
                 </div>
             </div>
         );
     }
 
-    return null; // Should not happen
+    return null;
 };
 
+// FIX: Added default export for the App component.
 export default App;
