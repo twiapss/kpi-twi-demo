@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KPIEntry, KpiStatus } from '../types';
+import { KPIEntry, KpiStatus, Department } from '../types';
 import Card from './common/Card';
 
 interface ReportViewProps {
@@ -13,7 +13,8 @@ const ReportView: React.FC<ReportViewProps> = ({ kpiData }) => {
     item.mainKpi.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.subKpi.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.office.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.department.toLowerCase().includes(searchTerm.toLowerCase())
+    item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.notes.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusColor = (status: KpiStatus) => {
@@ -49,12 +50,14 @@ const ReportView: React.FC<ReportViewProps> = ({ kpiData }) => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-brand-blue dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">KPI Utama</th>
-                <th scope="col" className="px-6 py-3">Sub KPI</th>
+                <th scope="col" className="px-6 py-3">Sub KPI / Jenis KPI</th>
                 <th scope="col" className="px-6 py-3">Kantor</th>
                 <th scope="col" className="px-6 py-3">Departemen</th>
                 <th scope="col" className="px-6 py-3">Target</th>
                 <th scope="col" className="px-6 py-3">Realisasi</th>
                 <th scope="col" className="px-6 py-3">Pencapaian</th>
+                <th scope="col" className="px-6 py-3">Keterangan</th>
+                <th scope="col" className="px-6 py-3">Checklist</th>
                 <th scope="col" className="px-6 py-3">Status</th>
               </tr>
             </thead>
@@ -68,6 +71,12 @@ const ReportView: React.FC<ReportViewProps> = ({ kpiData }) => {
                   <td className="px-6 py-4">{item.target}</td>
                   <td className="px-6 py-4">{item.realization}</td>
                   <td className="px-6 py-4 font-bold">{item.achievement}%</td>
+                  <td className="px-6 py-4">{item.notes}</td>
+                  <td className="px-6 py-4 text-center">
+                    {item.department === Department.HR_AREA
+                      ? (item.checklistCompleted ? '☑️' : '☐')
+                      : 'N/A'}
+                  </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
                         {item.status}
