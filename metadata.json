@@ -1,0 +1,5 @@
+{
+  "name": "KPI Dashboard PT TWI Group",
+  "description": "A responsive web application for Key Performance Indicator (KPI) measurement, tracking, and analysis for PT TWI Group. It features data input forms, automated achievement calculation, and an interactive analytics dashboard for all departments and branches.",
+  "requestFramePermissions": []
+}
